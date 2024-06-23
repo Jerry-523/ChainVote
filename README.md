@@ -177,7 +177,7 @@ To run this project using Docker, follow these steps:
    - **Regular Security Audits**: Conduct periodic security audits to identify and fix vulnerabilities.
    - **Regulatory Compliance**: Ensure the system complies with local and international regulations related to data and privacy.
 
-### 7. **Replacement of the Backend with a More Scalable Language**
+#### 7. **Replacement of the Backend with a More Scalable Language**
    - Evaluate and implement the replacement of the current backend with a more scalable programming language that supports robust libraries for integration and scalability.
 
 ---
