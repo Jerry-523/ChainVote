@@ -179,4 +179,3 @@ To run this project using Docker, follow these steps:
 
 ---
 
-#### Feel free to contribute and send pull requests
