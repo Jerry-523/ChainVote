@@ -1,5 +1,8 @@
 ### Overview of Blockchain Functionality in the Project
 
+![server_cli](https://github.com/Jerry-523/ChainVote/assets/92488227/4843328d-8a75-461e-9d8b-f7cec9215423)
+
+
 #### Blockchain Structure
 
 1. **Genesis Block**:
@@ -50,6 +53,9 @@
 
 ### Application Summary
 
+![class](https://github.com/Jerry-523/ChainVote/assets/92488227/7a215fde-9a10-4682-bd24-c2432a6b9fea)
+
+
 - **Flask Backend**:
   - Web server that manages the blockchain.
   - Allows interaction with the blockchain through APIs to register voters, candidates, and conduct voting.
@@ -71,7 +77,9 @@
 6. The validated block is added to the blockchain.
 7. The Tkinter application shows the updated blockchain.
 
-![blockchain](https://github.com/Jerry-523/BlockChain-Learning/assets/92488227/f294922b-3fdd-4d5b-8617-494edd15d527)
+   
+![sequence](https://github.com/Jerry-523/ChainVote/assets/92488227/4f694f6e-6bae-4808-8943-b3a8900dac0e)
+
 
 ### Project Structure
 
