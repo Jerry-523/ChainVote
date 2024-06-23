@@ -1,0 +1,23 @@
+version: '3'
+services:
+  blockchain-server:
+    build:
+      context: ./blockchain_server
+    ports:
+      - "5000:5000"
+    networks:
+      - blockchain_network
+    environment:
+      - FLASK_RUN_HOST=0.0.0.0  # Permitir conexões de qualquer IP
+    depends_on:
+      - validator-app
+
+  validator-app:
+    build:
+      context: ./validator_app
+    networks:
+      - blockchain_network
+
+networks:
+  blockchain_network:
+    driver: bridge
