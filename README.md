@@ -178,7 +178,7 @@ To run this project using Docker, follow these steps:
    - **Regulatory Compliance**: Ensure the system complies with local and international regulations related to data and privacy.
 
 #### 7. **Replacement of the Backend with a More Scalable Language**
-   - Evaluate and implement the replacement of the current backend with a more scalable programming language that supports robust libraries for integration and scalability.
+   - Evaluate and implement the replacement of the current backend with a more scalable programming language that supports robust libraries for integration and scalability (`Like GO or RUST`).
 
 ---
 
