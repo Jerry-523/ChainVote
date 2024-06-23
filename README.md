@@ -176,3 +176,7 @@ To run this project using Docker, follow these steps:
 #### 6. **Audit and Compliance**
    - **Regular Security Audits**: Conduct periodic security audits to identify and fix vulnerabilities.
    - **Regulatory Compliance**: Ensure the system complies with local and international regulations related to data and privacy.
+
+---
+
+#### Feel free to contribute and send pull requests
