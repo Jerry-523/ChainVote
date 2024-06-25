@@ -1,3 +1,7 @@
+## Project Overview
+
+This project is a blockchain-based electronic voting system designed to ensure secure, transparent, and tamper-proof voting. The system leverages the principles of blockchain technology to maintain the integrity of the voting process by preventing double voting and ensuring that all votes are correctly recorded and verified.
+
 ### Overview of Blockchain Functionality in the Project
 
 ![server_cli](https://github.com/Jerry-523/ChainVote/assets/92488227/4843328d-8a75-461e-9d8b-f7cec9215423)
