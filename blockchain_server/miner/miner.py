@@ -54,4 +54,4 @@ if __name__ == "__main__":
 
     while True:
         mine_block(voter_id, candidate_id)
-        time.sleep(10)  # 10 seconds interval between mining blocks
+        time.sleep(100)  # 10 seconds interval between mining blocks

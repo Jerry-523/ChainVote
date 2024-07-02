@@ -1,94 +1,94 @@
+// miner/miner.go
+
 package main
 
 import (
-	"bytes"
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"time"
+    "fmt"
+    "log"
+    "net/http"
+    "io/ioutil"
+    "encoding/json"
+    "strconv"
+    "time"
+    "github.com/Jerry-523/ChainVote/tree/main---blockchian-in-Go/blockchain_server/blockchain"
 )
 
-// Estruturas e funções para Block e Transaction
-type Block struct {
-	Index        int           `json:"index"`
-	Timestamp    int64         `json:"timestamp"`
-	Transactions []Transaction `json:"transactions"`
-	Proof        int           `json:"proof"`
-	PreviousHash string        `json:"previous_hash"`
-}
+const BlockchainServerURL = "http://localhost:5000"
 
-type Transaction struct {
-	VoterID     string `json:"voter_id"`
-	CandidateID string `json:"candidate_id"`
-}
+func getLastBlock() (blockchain.Block, error) {
+    resp, err := http.Get(fmt.Sprintf("%s/blocks", BlockchainServerURL))
+    if err != nil {
+        return blockchain.Block{}, err
+    }
+    defer resp.Body.Close()
 
-func hash(block Block) string {
-	blockBytes, _ := json.Marshal(block)
-	hash := sha256.Sum256(blockBytes)
-	return hex.EncodeToString(hash[:])
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return blockchain.Block{}, err
+    }
+
+    var result struct {
+        Blocks []blockchain.Block `json:"blocks"`
+    }
+    if err := json.Unmarshal(body, &result); err != nil {
+        return blockchain.Block{}, err
+    }
+
+    if len(result.Blocks) == 0 {
+        return blockchain.Block{}, fmt.Errorf("no blocks found")
+    }
+
+    return result.Blocks[len(result.Blocks)-1], nil
 }
 
 func proofOfWork(lastProof int) int {
-	proof := 0
-	for !validProof(lastProof, proof) {
-		proof++
-	}
-	return proof
+    proof := 0
+    for !validProof(lastProof, proof) {
+        proof++
+    }
+    return proof
 }
 
 func validProof(lastProof, proof int) bool {
-	guess := fmt.Sprintf("%d%d", lastProof, proof)
-	guessHash := sha256.Sum256([]byte(guess))
-	return hex.EncodeToString(guessHash[:])[:4] == "0000"
+    guess := fmt.Sprintf("%d%d", lastProof, proof)
+    guessHash := sha256.Sum256([]byte(guess))
+    return hex.EncodeToString(guessHash[:])[:4] == "0000"
 }
 
-func mine() {
-	for {
-		resp, err := http.Get("http://localhost:5000/blocks")
-		if err != nil {
-			fmt.Println("Error getting blocks:", err)
-			time.Sleep(10 * time.Second)
-			continue
-		}
+func mineBlock(voterID, candidateID string) {
+    lastBlock, err := getLastBlock()
+    if err != nil {
+        log.Fatalf("Error getting the last block: %v", err)
+    }
 
-		var result map[string]interface{}
-		if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-			fmt.Println("Error decoding response:", err)
-			time.Sleep(10 * time.Second)
-			continue
-		}
+    lastProof := lastBlock.Proof
+    proof := proofOfWork(lastProof)
 
-		blocks := result["blocks"].([]interface{})
-		lastBlock := blocks[len(blocks)-1].(map[string]interface{})
-		lastProof := int(lastBlock["proof"].(float64))
-		lastHash := lastBlock["previous_hash"].(string)
+    data := map[string]string{
+        "voter_id":     voterID,
+        "candidate_id": candidateID,
+    }
 
-		proof := proofOfWork(lastProof)
-		newBlock := Block{
-			Index:        len(blocks) + 1,
-			Timestamp:    time.Now().Unix(),
-			Transactions: []Transaction{}, // As transações devem ser enviadas pelo servidor principal
-			Proof:        proof,
-			PreviousHash: lastHash,
-		}
+    resp, err := http.Post(fmt.Sprintf("%s/mine", BlockchainServerURL), "application/json", bytes.NewBuffer(jsonData))
+    if err != nil {
+        log.Fatalf("Error sending the new block: %v", err)
+    }
+    defer resp.Body.Close()
 
-		blockBytes, _ := json.Marshal(newBlock)
-		resp, err = http.Post("http://localhost:5000/mine", "application/json", bytes.NewBuffer(blockBytes))
-		if err != nil {
-			fmt.Println("Error mining block:", err)
-			time.Sleep(10 * time.Second)
-			continue
-		}
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        log.Fatalf("Error reading the response body: %v", err)
+    }
 
-		
-
-		fmt.Println("Mined a new block:", result)
-		time.Sleep(10 * time.Second) // Ajuste o intervalo conforme necessário
-	}
+    fmt.Println("Block mined successfully:", string(body))
 }
 
 func main() {
-	mine()
+    voterID := "voter123"
+    candidateID := "candidate456"
+
+    for {
+        mineBlock(voterID, candidateID)
+        time.Sleep(10 * time.Second)  // 10 seconds interval between mining blocks
+    }
 }
