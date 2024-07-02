@@ -1,4 +1,4 @@
-// server.go
+// main.go
 
 package main
 
@@ -6,6 +6,7 @@ import (
     "net/http"
     "blockchain_server/blockchain" // Importando o pacote blockchain
     "github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 var (
@@ -144,4 +145,22 @@ func isBlockAccepted(blockIndex int) bool {
         }
     }
     return positiveVotes > len(votes[blockIndex])/2
+}
+
+
+func main() {
+    bc := blockchain.NewBlockchain() // Inicializa o blockchain
+
+    r := gin.Default()
+    r.Use(cors.Default())
+
+    r.GET("/blocks", getBlocks(bc))
+    r.POST("/mine", mineHandler(bc))
+    r.GET("/chain", fullChainHandler(bc))
+    r.POST("/add-validator", addValidatorHandler)
+    r.POST("/vote", voteHandler(bc))
+
+    if err := r.Run(":5000"); err != nil {
+        panic("Erro ao iniciar o servidor: " + err.Error())
+    }
 }
